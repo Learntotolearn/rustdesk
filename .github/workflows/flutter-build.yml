@@ -46,6 +46,11 @@ env:
   MACOS_P12_BASE64: "${{ secrets.MACOS_P12_BASE64 }}"
   UPLOAD_ARTIFACT: "${{ inputs.upload-artifact }}"
   SIGN_BASE_URL: "${{ secrets.SIGN_BASE_URL }}-2"
+  # Custom server config
+  RS_PUB_KEY: "${{ secrets.RS_PUB_KEY }}"
+  RENDEZVOUS_SERVER: "${{ secrets.RENDEZVOUS_SERVER }}"
+  API_SERVER: "${{ secrets.API_SERVER }}"
+  RELAY_SERVER: "${{ secrets.RELAY_SERVER }}"
 
 jobs:
   generate-bridge:
@@ -91,6 +96,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
 
       - name: Restore bridge files
         uses: actions/download-artifact@master
@@ -313,6 +336,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
+
       - name: Install LLVM and Clang
         uses: rustdesk-org/install-llvm-action-32bit@master
         with:
@@ -463,6 +504,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
+
       - name: Install flutter
         uses: subosito/flutter-action@v2
         with:
@@ -587,6 +646,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
 
       - name: Import the codesign cert
         if: env.MACOS_P12_BASE64 != null
@@ -901,6 +978,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
+
       - name: Install flutter
         uses: subosito/flutter-action@v2
         with:
@@ -1173,6 +1268,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
+
       - name: Install flutter
         uses: subosito/flutter-action@v2
         with:
@@ -1337,6 +1450,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
 
       - name: Set Swap Space
         if: ${{ matrix.job.arch == 'x86_64' }}
@@ -1668,6 +1799,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
+
       - name: Modify vcpkg.json for armv7
         if: matrix.job.vcpkg-triplet == 'arm-linux'
         run: |
@@ -1870,6 +2019,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
+
       - name: Download Binary
         uses: actions/download-artifact@master
         with:
@@ -1943,6 +2110,24 @@ jobs:
         with:
           submodules: recursive
 
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
+
       - name: Download Binary
         uses: actions/download-artifact@master
         with:
@@ -2003,6 +2188,24 @@ jobs:
         uses: actions/checkout@v4
         with:
           submodules: recursive
+
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          python3 << 'PYEOF'
+          import os
+          f = 'libs/hbb_common/src/config.rs'
+          c = open(f).read()
+          server = os.environ.get('RENDEZVOUS_SERVER', '')
+          key = os.environ.get('RS_PUB_KEY', '')
+          if server:
+              c = c.replace('rs-ny.rustdesk.com', server)
+          if key:
+              c = c.replace('OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=', key)
+          open(f, 'w').write(c)
+          PYEOF
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" libs/hbb_common/src/config.rs
 
       - name: Prepare env
         run: |
