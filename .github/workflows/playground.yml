@@ -26,6 +26,7 @@ env:
   RS_PUB_KEY: "${{ secrets.RS_PUB_KEY }}"
   RENDEZVOUS_SERVER: "${{ secrets.RENDEZVOUS_SERVER }}"
   API_SERVER: "${{ secrets.API_SERVER }}"
+  RELAY_SERVER: "${{ secrets.RELAY_SERVER }}"
   UPLOAD_ARTIFACT: "${{ inputs.upload-artifact }}"
   SIGN_BASE_URL: "${{ secrets.SIGN_BASE_URL }}"
 
@@ -90,6 +91,21 @@ jobs:
         with:
           ref: ${{ matrix.job.ref }}
           submodules: recursive
+
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          CONFIG_FILE="libs/hbb_common/src/config.rs"
+          echo "Patching custom server config..."
+          # Replace ID/rendezvous server
+          sed -i '' "s|RENDEZVOUS_SERVERS: &\[&str\] = &\[\"rs-ny.rustdesk.com\"\]|RENDEZVOUS_SERVERS: \&[\&str] = \&[\"${{ env.RENDEZVOUS_SERVER }}\"]|g" "$CONFIG_FILE"
+          # Replace public key
+          if [ -n "${{ env.RS_PUB_KEY }}" ]; then
+            sed -i '' "s|RS_PUB_KEY: &str = \"OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=\"|RS_PUB_KEY: \&str = \"${{ env.RS_PUB_KEY }}\"|g" "$CONFIG_FILE"
+          fi
+          echo "=== Patched config.rs ==="
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" "$CONFIG_FILE"
 
       - name: Import the codesign cert
         if: env.MACOS_P12_BASE64 != null
@@ -251,6 +267,21 @@ jobs:
         with:
           ref: ${{ matrix.job.ref }}
           submodules: recursive
+
+      - name: Patch custom server config
+        if: env.RENDEZVOUS_SERVER != ''
+        shell: bash
+        run: |
+          CONFIG_FILE="libs/hbb_common/src/config.rs"
+          echo "Patching custom server config..."
+          # Replace ID/rendezvous server
+          sed -i "s|RENDEZVOUS_SERVERS: &\[&str\] = &\[\"rs-ny.rustdesk.com\"\]|RENDEZVOUS_SERVERS: \&[\&str] = \&[\"${{ env.RENDEZVOUS_SERVER }}\"]|g" "$CONFIG_FILE"
+          # Replace public key
+          if [ -n "${{ env.RS_PUB_KEY }}" ]; then
+            sed -i "s|RS_PUB_KEY: &str = \"OeVuKk5nlHiXp+APNn0Y3pC1Iwpwn44JGqrQCsWqmBw=\"|RS_PUB_KEY: \&str = \"${{ env.RS_PUB_KEY }}\"|g" "$CONFIG_FILE"
+          fi
+          echo "=== Patched config.rs ==="
+          grep -n "RENDEZVOUS_SERVERS\|RS_PUB_KEY" "$CONFIG_FILE"
 
       - name: Install dependencies
         run: |
